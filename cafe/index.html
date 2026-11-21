@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>브루잉로드 | 김포 걸포동 로스팅 카페</title>
+
+  <style>
+    /* ============================================================
+       색상은 여기서만 관리합니다 (우드톤: 갈색·베이지·크림)
+       ============================================================ */
+    :root {
+      --wood-dark:   #3e2a1e;   /* 진한 나무색 (첫 화면·하단 배경) */
+      --wood:        #6b4429;   /* 기본 갈색 (제목·버튼) */
+      --caramel:     #c47f43;   /* 포인트 (강조·전화 버튼) */
+      --beige:       #e8d9c0;   /* 구분선·테두리 */
+      --cream:       #f7f0e3;   /* 페이지 바탕 */
+      --paper:       #fffaf1;   /* 카드 바탕 */
+      --text:        #3a2a20;   /* 본문 글자 */
+      --text-soft:   #7a6453;   /* 보조 글자 */
+      --closed:      #a8392b;   /* 휴무 강조 (붉은 벽돌색) */
+      --closed-bg:   #f8e3dd;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                   "Malgun Gothic", "Noto Sans KR", "Segoe UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    /* 화면 폭: 휴대폰은 꽉 차게, PC에서는 가운데 적당한 폭 */
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--cream);
+      box-shadow: 0 0 40px rgba(62, 42, 30, 0.15);
+    }
+
+    h1, h2, p, ul { margin: 0; padding: 0; }
+    ul { list-style: none; }
+
+    /* ---------- 첫 화면 ---------- */
+    #hero {
+      background: var(--wood-dark);
+      color: var(--cream);
+      text-align: center;
+      padding: 56px 24px 40px;
+    }
+    #hero h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+    #hero .tagline {
+      margin: 14px 0 30px;
+      font-size: 1.1rem;
+      color: var(--beige);
+    }
+    #hero .tagline::before,
+    #hero .tagline::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: var(--caramel);
+      margin: 0 auto 14px;
+    }
+    #hero .tagline::after { margin: 14px auto 0; }
+
+    /* ---------- 버튼 (전화·지도) ---------- */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 0 20px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      font: inherit;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:focus-visible { outline: 3px solid var(--caramel); outline-offset: 3px; }
+
+    .btn-call {                        /* 전화하기: 가장 눈에 띄게 */
+      background: var(--caramel);
+      color: #fff;
+    }
+    .btn-map {                         /* 지도 보기: 어두운 배경용 윤곽선 버튼 */
+      background: transparent;
+      color: var(--cream);
+      border-color: var(--beige);
+    }
+    .btn-map.on-light {                /* 밝은 배경에서의 지도 버튼 */
+      background: var(--wood);
+      color: var(--cream);
+      border-color: var(--wood);
+    }
+
+    /* ---------- 본문 영역 공통 ---------- */
+    main { padding: 24px 16px 8px; }
+
+    section {
+      background: var(--paper);
+      border: 1px solid var(--beige);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--wood);
+      line-height: 1.3;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--beige);
+    }
+
+    /* 가게 소개 */
+    #about p + p { color: var(--text-soft); }
+
+    /* 줄 형태 목록 (메뉴·영업시간) */
+    .rows li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--beige);
+    }
+    .rows li:last-child { border-bottom: 0; }
+
+    /* 메뉴: 이름은 보통, 가격은 굵고 갈색 */
+    .item-name { font-weight: 500; }
+    .item-price {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--wood);
+      white-space: nowrap;
+    }
+
+    /* 공간 안내: 알약 모양 */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chips li {
+      background: var(--cream);
+      border: 1px solid var(--beige);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-weight: 500;
+    }
+
+    /* 영업시간 */
+    .hours-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .hours-table th,
+    .hours-table td {
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 500;
+      border-bottom: 1px dashed var(--beige);
+    }
+    .hours-table thead th {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      border-bottom: 2px solid var(--beige);
+    }
+    .hours-table tbody th { font-weight: 600; white-space: nowrap; }
+    .hours-table td { text-align: right; white-space: nowrap; }
+    .hours-table thead th:last-child { text-align: right; }
+    .hours-table tbody tr:last-child th,
+    .hours-table tbody tr:last-child td { border-bottom: 0; }
+
+    /* 휴무일(월요일) 강조 */
+    .hours-table tr[data-closed="true"] th,
+    .hours-table tr[data-closed="true"] td {
+      background: var(--closed-bg);
+      color: var(--closed);
+      font-weight: 800;
+      border-bottom-color: transparent;
+    }
+    .hours-table tr[data-closed="true"] th { border-radius: 10px 0 0 10px; }
+    .hours-table tr[data-closed="true"] td { border-radius: 0 10px 10px 0; }
+
+    /* 오늘 영업일 강조 */
+    .hours-table tr.today:not([data-closed="true"]) th,
+    .hours-table tr.today:not([data-closed="true"]) td {
+      background: #f3e2c7;
+      font-weight: 700;
+      border-bottom-color: transparent;
+    }
+    .hours-table tr.today:not([data-closed="true"]) th { border-radius: 10px 0 0 10px; }
+    .hours-table tr.today:not([data-closed="true"]) td { border-radius: 0 10px 10px 0; }
+
+    .badge {
+      display: inline-block;
+      margin-right: 8px;
+      padding: 1px 9px;
+      border-radius: 999px;
+      background: var(--wood);
+      color: var(--cream);
+      font-size: 0.8rem;
+      font-weight: 700;
+      vertical-align: 2px;
+    }
+    #hours tr[data-closed="true"] .badge { background: var(--closed); color: #fff; }
+
+    #today-notice {
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: var(--wood);
+    }
+    #today-notice:empty { display: none; }
+    #today-notice.closed { color: var(--closed); }
+
+    /* 위치 안내 */
+    .address {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .station {
+      color: var(--text-soft);
+      margin-bottom: 18px;
+    }
+    #copy-address {
+      margin-top: 12px;
+      background: transparent;
+      color: var(--wood);
+      border-color: var(--beige);
+      min-height: 48px;
+      font-size: 1rem;
+    }
+    #copy-result {
+      display: block;
+      min-height: 1.7em;
+      margin-top: 6px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+    }
+
+    /* ---------- 하단 연락처 ---------- */
+    #contact {
+      background: var(--wood-dark);
+      color: var(--cream);
+      padding: 36px 24px 44px;
+      margin-top: 14px;
+    }
+    #contact h2 {
+      color: var(--cream);
+      border-bottom-color: var(--wood);
+    }
+    #contact .info { margin-bottom: 4px; }
+    #contact .info strong { color: var(--beige); font-weight: 600; margin-right: 6px; }
+    #contact a.link { color: var(--cream); font-weight: 700; }
+    #contact .actions { margin-top: 24px; }
+
+    /* ---------- 아주 작은 화면 ---------- */
+    @media (max-width: 360px) {
+      body { font-size: 16px; }
+      #hero h1 { font-size: 2.2rem; }
+      section { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 1. 첫 화면 -->
+  <header id="hero">
+    <h1>브루잉로드</h1>
+    <p class="tagline">매일 아침 볶는 싱글 오리진</p>
+    <div class="actions">
+      <a class="btn btn-call js-call" href="#">전화하기</a>
+      <a class="btn btn-map js-map" href="#" target="_blank" rel="noopener noreferrer">지도 보기</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- 2. 가게 소개 -->
+    <section id="about">
+      <h2>가게 소개</h2>
+      <p>원두를 직접 로스팅합니다.</p>
+      <p>2019년 오픈</p>
+    </section>
+
+    <!-- 3. 메뉴 (F1) -->
+    <section id="menu">
+      <h2>메뉴</h2>
+      <ul class="rows">
+        <li><span class="item-name">핸드드립</span><span class="item-price">6,000원</span></li>
+        <li><span class="item-name">플랫화이트</span><span class="item-price">5,000원</span></li>
+        <li><span class="item-name">바스크 치즈케이크</span><span class="item-price">7,000원</span></li>
+      </ul>
+    </section>
+
+    <!-- 4. 공간 안내 -->
+    <section id="space">
+      <h2>공간 안내</h2>
+      <ul class="chips">
+        <li>좌석 8석</li>
+        <li>노트북 사용 가능</li>
+        <li>콘센트 4구</li>
+      </ul>
+    </section>
+
+    <!-- 5. 영업시간 (F2) : data-days = 해당 요일 번호 (일0 월1 화2 수3 목4 금5 토6) -->
+    <section id="hours">
+      <h2>영업시간</h2>
+      <p id="today-notice"></p>
+      <table class="hours-table">
+        <thead>
+          <tr><th scope="col">요일</th><th scope="col">영업시간</th></tr>
+        </thead>
+        <tbody>
+          <tr data-days="1" data-closed="true"><th scope="row">월요일</th><td>휴무</td></tr>
+          <tr data-days="2"><th scope="row">화요일</th><td>08:00 ~ 20:00</td></tr>
+          <tr data-days="3"><th scope="row">수요일</th><td>08:00 ~ 20:00</td></tr>
+          <tr data-days="4"><th scope="row">목요일</th><td>08:00 ~ 20:00</td></tr>
+          <tr data-days="5"><th scope="row">금요일</th><td>08:00 ~ 20:00</td></tr>
+          <tr data-days="6"><th scope="row">토요일</th><td>10:00 ~ 18:00</td></tr>
+          <tr data-days="0"><th scope="row">일요일</th><td>10:00 ~ 18:00</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. 위치 안내 (F3) -->
+    <section id="location">
+      <h2>위치 안내</h2>
+      <p class="address js-address"></p>
+      <p class="station">걸포북변역에서 도보 5분</p>
+      <div class="actions">
+        <a class="btn btn-map on-light js-map" href="#" target="_blank" rel="noopener noreferrer">지도 보기</a>
+        <button type="button" class="btn" id="copy-address">주소 복사</button>
+      </div>
+      <span id="copy-result"></span>
+    </section>
+
+  </main>
+
+  <!-- 7. 하단 연락처 -->
+  <footer id="contact">
+    <h2>연락처</h2>
+    <p class="info"><strong>전화</strong><span class="js-phone-text"></span></p>
+    <p class="info"><strong>인스타그램</strong><a class="link js-instagram" href="#" target="_blank" rel="noopener noreferrer"></a></p>
+    <div class="actions">
+      <a class="btn btn-call js-call" href="#">전화하기</a>
+      <a class="btn btn-map js-map" href="#" target="_blank" rel="noopener noreferrer">지도 보기</a>
+    </div>
+  </footer>
+
+</div>
+
+  <script>
+    // ============================================================
+    // 사장님이 고치는 곳: 주소·전화번호·지도·인스타그램은 여기만 바꾸세요.
+    // ============================================================
+    var INFO = {
+      address:       "경기도 김포시 걸포동",
+      phone:         "031-000-0000",          // 연습용 번호
+      mapQuery:      "걸포북변역",              // 지도에서 검색할 말
+      instagramName: "brewingroad"
+    };
+
+    // ---- 아래는 위 값을 화면에 연결하는 코드입니다 (수정 불필요) ----
+    var phoneLink = "tel:" + INFO.phone.replace(/[^0-9+]/g, "");
+    var mapLink = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(INFO.mapQuery);
+    var instagramLink = "https://www.instagram.com/" + INFO.instagramName + "/";
+
+    function each(selector, fn) {
+      Array.prototype.forEach.call(document.querySelectorAll(selector), fn);
+    }
+
+    // F4 전화 걸기 (첫 화면·하단)
+    each(".js-call", function (el) { el.href = phoneLink; });
+
+    // F5 지도 보기 (새 탭으로 열림, 3곳 모두)
+    each(".js-map", function (el) { el.href = mapLink; });
+
+    // F3 주소, 연락처 문구
+    each(".js-address", function (el) { el.textContent = INFO.address; });
+    each(".js-phone-text", function (el) { el.textContent = INFO.phone; });
+
+    // 인스타그램
+    each(".js-instagram", function (el) {
+      el.href = instagramLink;
+      el.textContent = "@" + INFO.instagramName;
+    });
+
+    // (선택) 오늘 요일 영업시간 강조 / 오늘 휴무 표시
+    var today = new Date().getDay();
+    var notice = document.getElementById("today-notice");
+    each("#hours tbody tr", function (row) {
+      if (row.getAttribute("data-days") !== String(today)) return;
+      var closed = row.getAttribute("data-closed") === "true";
+      row.className = "today";
+      var badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "오늘";
+      var label = row.querySelector("th");
+      label.insertBefore(badge, label.firstChild);
+      notice.textContent = closed ? "오늘은 휴무입니다." : "오늘은 영업일입니다.";
+      if (closed) notice.className = "closed";
+    });
+
+    // (선택) 주소 복사 버튼
+    var copyBtn = document.getElementById("copy-address");
+    var copyResult = document.getElementById("copy-result");
+    copyBtn.addEventListener("click", function () {
+      function done(ok) {
+        copyResult.textContent = ok ? "복사되었습니다." : "복사하지 못했습니다.";
+        setTimeout(function () { copyResult.textContent = ""; }, 2000);
+      }
+      // 파일로 바로 열었을 때도 복사되도록, 실패하면 예전 방식으로 한 번 더 시도
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = INFO.address;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(INFO.address).then(function () { done(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  </script>
+</body>
+</html>
